@@ -6,69 +6,25 @@ from langchain_classic.chains import RetrievalQA
 from dotenv import load_dotenv
 import os
 
-# ==========================================
-# ENV
-# ==========================================
-
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
-
-# ==========================================
-# EMBEDDING MODEL
-# ==========================================
 
 embedding_model = HuggingFaceEmbeddings(
     model_name="BAAI/bge-base-en-v1.5"
 )
 
-# ==========================================
-# VECTOR STORE PATH
-# ==========================================
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 PERSIST_DIR = r"C:\Users\boddu\Innomatics\Batch no-435\Deep Learning(Neural Networks)\LLM'S\IPL_Vector_Store_DB"
-
-# ==========================================
-# LOAD EXISTING VECTOR DATABASE
-# ==========================================
 
 vector_store = Chroma(
     persist_directory=PERSIST_DIR,
     embedding_function=embedding_model
 )
 
-# ==========================================
-# DEBUG
-# ==========================================
-
-print("="*60)
-print("Vector Count:", vector_store._collection.count())
-print("Current Folder:", os.getcwd())
-print("DB Exists:", os.path.exists(PERSIST_DIR))
-print("DB Path:", PERSIST_DIR)
-print("="*60)
-print("Collection Name:", vector_store._collection.name)
-
-print("Files in DB Folder:")
-print(os.listdir(PERSIST_DIR))
-
-print("File Path")
-print(os.path.abspath("IPL_Vector_Store_DB"))
-
-# ==========================================
-# RETRIEVER
-# ==========================================
-
 retriever = vector_store.as_retriever(
     search_type="similarity",
     search_kwargs={"k":10}
 )
-
-# ==========================================
-# PROMPT
-# ==========================================
 
 template="""
 You are an elite IPL cricket analyst and statistics expert.
@@ -102,19 +58,11 @@ prompt = PromptTemplate(
     template=template
 )
 
-# ==========================================
-# LLM
-# ==========================================
-
 generator = ChatGroq(
     model= 'openai/gpt-oss-120b',
     temperature=0,
     api_key=api_key
 )
-
-# ==========================================
-# RAG CHAIN
-# ==========================================
 
 rag = RetrievalQA.from_chain_type(
     llm=generator,
