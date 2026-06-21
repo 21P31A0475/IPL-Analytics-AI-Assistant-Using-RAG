@@ -109,7 +109,7 @@ Ask questions such as:
 * Which team won the IPL in 2016?
 * What is Virat Kohli's IPL performance?
 * Which bowler has the most wickets?
-* 
+  
 ### Context-Aware Responses
 
 The assistant retrieves relevant information before generating answers.
